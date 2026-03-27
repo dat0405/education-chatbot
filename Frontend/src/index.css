@@ -1,0 +1,112 @@
+:root {
+  font-family: Inter, Arial, sans-serif;
+  color: #111;
+  background: #f6f7fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.page {
+  min-height: 100vh;
+  padding: 32px 16px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+h1 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+}
+
+.subtitle {
+  margin: 0 0 20px;
+  color: #555;
+}
+
+.toolbar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.upload-btn {
+  background: #111;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.status {
+  color: #444;
+}
+
+.chatbox {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 16px;
+  min-height: 420px;
+  margin-bottom: 16px;
+}
+
+.msg {
+  max-width: 80%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.msg.user {
+  background: #dcecff;
+  margin-left: auto;
+}
+
+.msg.assistant {
+  background: #f1f3f5;
+}
+
+.role {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.composer {
+  display: flex;
+  gap: 10px;
+}
+
+.composer input {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+.composer button {
+  padding: 14px 18px;
+  border: none;
+  border-radius: 12px;
+  background: #111;
+  color: white;
+  cursor: pointer;
+}
+
+.thinking {
+  color: #666;
+}
