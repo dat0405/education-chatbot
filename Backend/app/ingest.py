@@ -1,11 +1,13 @@
 import os
 from uuid import uuid4
 from sqlalchemy.orm import Session
-from app.config import settings
 from app.database import Document
-from app.utils import extract_text, chunk_text
-from app.rag import upsert_chunks
-
+from app.rag import (
+    ensure_vector_store,
+    upload_file_to_openai,
+    add_file_to_vector_store,
+    wait_until_file_ready,
+)
 
 SUPPORTED_EXTENSIONS = {".pdf", ".docx", ".txt", ".md"}
 
@@ -23,26 +25,17 @@ def ingest_file(db: Session, file_path: str, filename: str):
         filename=filename,
         file_type=ext,
         status="processing",
-        chunk_count=0
+        chunk_count=1
     )
     db.add(doc)
     db.commit()
 
-    text = extract_text(file_path)
-    chunks = chunk_text(
-        text=text,
-        chunk_size=settings.chunk_size,
-        overlap=settings.chunk_overlap
-    )
-
-    chunk_count = upsert_chunks(
-        document_id=document_id,
-        source_name=filename,
-        chunks=chunks
-    )
+    vector_store_id = ensure_vector_store()
+    file_id = upload_file_to_openai(file_path)
+    vs_file = add_file_to_vector_store(vector_store_id, file_id)
+    wait_until_file_ready(vector_store_id, vs_file.id)
 
     doc.status = "indexed"
-    doc.chunk_count = chunk_count
     db.commit()
     db.refresh(doc)
 

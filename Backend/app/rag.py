@@ -1,124 +1,80 @@
-import requests
-from uuid import uuid4
-from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchValue
+import time
+from openai import OpenAI
 from app.config import settings
 
-qdrant = QdrantClient(path="./qdrant_data")
+client = OpenAI(api_key=settings.openai_api_key)
+
+_cached_vector_store_id = None
 
 
-def embed_texts(texts: list[str]) -> list[list[float]]:
-    response = requests.post(
-        f"{settings.ollama_url}/api/embed",
-        json={
-            "model": settings.embedding_model,
-            "input": texts
-        },
-        timeout=120
+def ensure_vector_store():
+    global _cached_vector_store_id
+
+    if _cached_vector_store_id:
+        return _cached_vector_store_id
+
+    if settings.openai_vector_store_id:
+        _cached_vector_store_id = settings.openai_vector_store_id
+        return _cached_vector_store_id
+
+    vs = client.vector_stores.create(
+        name="Education Expert Public Demo"
     )
-    response.raise_for_status()
-    data = response.json()
-    return data["embeddings"]
+    _cached_vector_store_id = vs.id
+    print("CREATED VECTOR STORE:", vs.id)
+    return _cached_vector_store_id
 
 
-def ensure_collection(vector_size: int):
-    collections = qdrant.get_collections().collections
-    existing_names = [c.name for c in collections]
+def upload_file_to_openai(file_path: str):
+    with open(file_path, "rb") as f:
+        uploaded = client.files.create(
+            file=f,
+            purpose="assistants"
+        )
+    return uploaded.id
 
-    if settings.collection_name not in existing_names:
-        qdrant.create_collection(
-            collection_name=settings.collection_name,
-            vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE)
+
+def add_file_to_vector_store(vector_store_id: str, file_id: str):
+    return client.vector_stores.files.create(
+        vector_store_id=vector_store_id,
+        file_id=file_id
+    )
+
+
+def wait_until_file_ready(vector_store_id: str, vector_store_file_id: str):
+    while True:
+        result = client.vector_stores.files.retrieve(
+            vector_store_id=vector_store_id,
+            file_id=vector_store_file_id
         )
 
+        if result.status == "completed":
+            return
 
-def upsert_chunks(document_id: str, source_name: str, chunks: list[str]) -> int:
-    embeddings = embed_texts(chunks)
-    ensure_collection(len(embeddings[0]))
+        if result.status in ["failed", "cancelled"]:
+            raise RuntimeError(f"Vector store file failed with status: {result.status}")
 
-    points = []
-    for chunk, vector in zip(chunks, embeddings):
-        chunk_id = str(uuid4())
-        points.append(
-            PointStruct(
-                id=chunk_id,
-                vector=vector,
-                payload={
-                    "document_id": document_id,
-                    "chunk_id": chunk_id,
-                    "source": source_name,
-                    "text": chunk
-                }
-            )
-        )
+        time.sleep(2)
 
-    qdrant.upsert(
-        collection_name=settings.collection_name,
-        points=points
+
+def generate_answer(question: str, vector_store_id: str) -> str:
+    response = client.responses.create(
+        model="gpt-4.1-mini",
+        input=[
+            {
+                "role": "user",
+                "content": question
+            }
+        ],
+        tools=[
+            {
+                "type": "file_search",
+                "vector_store_ids": [vector_store_id]
+            }
+        ]
     )
-    return len(points)
-
-
-def search_chunks(query: str, limit: int = 5):
-    query_vector = embed_texts([query])[0]
-    results = qdrant.query_points(
-        collection_name=settings.collection_name,
-        query=query_vector,
-        limit=limit
-    )
-    return results.points
+    return response.output_text
 
 
 def delete_document_chunks(document_id: str):
-    qdrant.delete(
-        collection_name=settings.collection_name,
-        points_selector=Filter(
-            must=[
-                FieldCondition(
-                    key="document_id",
-                    match=MatchValue(value=document_id)
-                )
-            ]
-        )
-    )
-
-
-def generate_answer(question: str, context_blocks: list[dict]) -> str:
-    context_text = "\n\n---\n\n".join(
-        [
-            f"Source: {item['source']}\nChunk ID: {item['chunk_id']}\nText: {item['text']}"
-            for item in context_blocks
-        ]
-    )
-
-    prompt = f"""
-You are a Finnish education expert assistant.
-Answer ONLY from the provided context.
-If the answer is not supported by the context, say:
-"I cannot verify that from the uploaded research."
-
-When possible:
-1. explain clearly
-2. keep the answer practical
-3. avoid inventing claims
-4. refer to the uploaded materials only
-
-Context:
-{context_text}
-
-User question:
-{question}
-""".strip()
-
-    response = requests.post(
-        f"{settings.ollama_url}/api/generate",
-        json={
-            "model": settings.chat_model,
-            "prompt": prompt,
-            "stream": False
-        },
-        timeout=240
-    )
-    response.raise_for_status()
-    data = response.json()
-    return data["response"]
+    return

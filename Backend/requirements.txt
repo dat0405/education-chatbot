@@ -7,3 +7,4 @@ qdrant-client
 pypdf
 python-docx
 sqlalchemy
+openai

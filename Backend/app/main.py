@@ -8,7 +8,6 @@ from app.config import settings
 from app.schemas import (
     ChatRequest,
     ChatResponse,
-    SourceItem,
     UploadResponse,
     UploadItem,
     DocumentItem,
@@ -16,7 +15,7 @@ from app.schemas import (
 )
 from app.database import SessionLocal, init_db, Document
 from app.ingest import ingest_file
-from app.rag import search_chunks, generate_answer, delete_document_chunks
+from app.rag import generate_answer, ensure_vector_store, delete_document_chunks
 
 app = FastAPI(title="Education Expert RAG API")
 
@@ -25,8 +24,8 @@ init_db()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=False,
+    allow_origins=settings.cors_origins,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -38,6 +37,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.get("/")
+def root():
+    return {"message": "Education Expert RAG API is running"}
 
 
 @app.get("/health")
@@ -86,35 +90,12 @@ def chat(req: ChatRequest):
     if not user_message:
         raise HTTPException(status_code=400, detail="Empty user message")
 
-    hits = search_chunks(user_message, limit=5)
-
-    context_blocks = []
-    sources = []
-
-    for hit in hits:
-        payload = hit.payload
-        context_blocks.append(
-            {
-                "document_id": payload["document_id"],
-                "chunk_id": payload["chunk_id"],
-                "source": payload["source"],
-                "text": payload["text"]
-            }
-        )
-        sources.append(
-            SourceItem(
-                document_id=payload["document_id"],
-                source=payload["source"],
-                chunk_id=payload["chunk_id"],
-                text_preview=payload["text"][:220]
-            )
-        )
-
-    answer = generate_answer(user_message, context_blocks)
+    vector_store_id = ensure_vector_store()
+    answer = generate_answer(user_message, vector_store_id)
 
     return ChatResponse(
         answer=answer,
-        sources=sources
+        sources=[]
     )
 
 

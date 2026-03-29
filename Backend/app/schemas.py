@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import List, Optional, Literal
+from pydantic import BaseModel, Field
+from typing import List, Literal
 
 
 class ChatMessage(BaseModel):
@@ -20,7 +20,7 @@ class SourceItem(BaseModel):
 
 class ChatResponse(BaseModel):
     answer: str
-    sources: List[SourceItem]
+    sources: List[SourceItem] = Field(default_factory=list)
 
 
 class UploadItem(BaseModel):

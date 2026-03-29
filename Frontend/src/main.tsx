@@ -8,7 +8,7 @@ type Msg = {
   content: string;
 };
 
-const API_BASE = "https://bdeff03ce1064b.lhr.life";
+const API_BASE = "http://127.0.0.1:8000";
 
 export default function App() {
   const [messages, setMessages] = useState<Msg[]>([
