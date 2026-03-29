@@ -1,10 +1,32 @@
-node_modules
-dist
+# ===== Backend (Python) =====
+__pycache__/
+*.pyc
+venv/
+Backend/venv/
+
+# Env (RẤT QUAN TRỌNG)
 .env
-.env.local
-uploads
+Backend/.env
+Frontend/.env
+
+# Database
+app.db
+Backend/app.db
+
+# Upload files
+uploads/
+Backend/uploads/
+
+# ===== Frontend =====
+node_modules/
+Frontend/node_modules/
+dist/
+Frontend/dist/
+
+# ===== OS =====
 .DS_Store
-frontend/node_modules
-backend/node_modules
-frontend/dist
-backend/dist
+Thumbs.db
+
+# ===== VSCode =====
+.vscode/
+TEST_IGNORE_DEBUG
