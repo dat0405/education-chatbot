@@ -8,7 +8,6 @@ type Msg = {
 };
 
 const API_BASE = "https://education-chatbot-production.up.railway.app";
-
 export default function App() {
   const [messages, setMessages] = useState<Msg[]>([
     {
