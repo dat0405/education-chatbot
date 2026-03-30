@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 
-
 type Msg = {
   role: "user" | "assistant";
   content: string;
 };
 
-const API_BASE = "http://127.0.0.1:8000";
+const API_BASE = "https://education-chatbot-production.up.railway.app";
 
 export default function App() {
   const [messages, setMessages] = useState<Msg[]>([
@@ -39,7 +38,7 @@ export default function App() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Upload failed");
+      if (!res.ok) throw new Error(data.detail || "Upload failed");
 
       setStatus(`Uploaded ${data.uploaded.length} file(s) successfully.`);
     } catch (error: any) {
@@ -68,7 +67,7 @@ export default function App() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Chat failed");
+      if (!res.ok) throw new Error(data.detail || "Chat failed");
 
       setMessages([...next, { role: "assistant", content: data.answer }]);
     } catch (error: any) {
@@ -85,9 +84,7 @@ export default function App() {
     <div className="page">
       <div className="container">
         <h1>Dr. Kaisa</h1>
-        <p className="subtitle">
-          Let's chat.
-        </p>
+        <p className="subtitle">Let's chat.</p>
 
         <div className="toolbar">
           <label className="upload-btn">
