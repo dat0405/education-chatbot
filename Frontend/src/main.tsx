@@ -8,12 +8,13 @@ type Msg = {
 };
 
 const API_BASE = "https://education-chatbot-production.up.railway.app";
+
 export default function App() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
       content:
-        "Hello. I am your education knowledge assistant. Upload your research and ask me questions."
+        "Hello. I’m Dr. AI Kaisa. Upload your research and ask me questions."
     }
   ]);
   const [text, setText] = useState("");
@@ -82,7 +83,7 @@ export default function App() {
   return (
     <div className="page">
       <div className="container">
-        <h1>Dr. Kaisa</h1>
+        <h1>Dr. AI Kaisa</h1>
         <p className="subtitle">Let's chat.</p>
 
         <div className="toolbar">
@@ -104,7 +105,9 @@ export default function App() {
               key={i}
               className={`msg ${m.role === "user" ? "user" : "assistant"}`}
             >
-              <div className="role">{m.role === "user" ? "You" : "Assistant"}</div>
+              <div className="role">
+                {m.role === "user" ? "You" : "Dr. AI Kaisa"}
+              </div>
               <div>{m.content}</div>
             </div>
           ))}

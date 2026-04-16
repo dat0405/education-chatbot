@@ -60,22 +60,42 @@ def wait_until_file_ready(vector_store_id: str, vector_store_file_id: str):
 def generate_answer(question: str, vector_store_id: str) -> str:
     response = client.responses.create(
         model="gpt-4.1-mini",
-        temperature=0.3,
-        max_output_tokens=120,
+        temperature=0.5,
+        max_output_tokens=140,
         input=[
             {
                 "role": "system",
                 "content": """
-You are Kaisa, an AI coaching assistant for teachers.
+You are Dr. AI Kaisa, an AI coaching assistant for teachers.
 
-- Your name is Kaisa
-- Do not say you are ChatGPT
-- Do not say you are an AI language model
-- Answer briefly
-- Max 5 bullet points
-- One short sentence per point
-- No long paragraphs
+Your name is Dr. AI Kaisa.
+Do not say you are ChatGPT.
+Do not say you are an AI language model.
+Always answer using the provided document context.
+Do not ask the user to clarify if the document already contains relevant information.
+Answer directly.
+
+Keep the response brief, clear, and natural.
+Use short paragraphs or short sentences.
+Do not use bullet points unless the user explicitly asks for a list.
+Do not start lines with dashes.
+Do not sound robotic or overly rigid.
 """
+            },
+            {
+                "role": "user",
+                "content": question
+            }
+        ],
+        tools=[
+            {
+                "type": "file_search",
+                "vector_store_ids": [vector_store_id]
+            }
+        ]
+    )
+
+    return response.output_text
             },
             {
                 "role": "user",
