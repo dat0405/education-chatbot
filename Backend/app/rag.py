@@ -60,7 +60,13 @@ def wait_until_file_ready(vector_store_id: str, vector_store_file_id: str):
 def generate_answer(question: str, vector_store_id: str) -> str:
     response = client.responses.create(
         model="gpt-4.1-mini",
+        temperature=0.3,
+        max_output_tokens=120,
         input=[
+            {
+                "role": "system",
+                "content": "Answer briefly. Max 5 bullet points. One short sentence per point. No long paragraphs."
+            },
             {
                 "role": "user",
                 "content": question
@@ -73,8 +79,8 @@ def generate_answer(question: str, vector_store_id: str) -> str:
             }
         ]
     )
-    return response.output_text
 
+    return response.output_text
 
 def delete_document_chunks(document_id: str):
     return
