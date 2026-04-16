@@ -96,21 +96,7 @@ Do not sound robotic or overly rigid.
     )
 
     return response.output_text
-            },
-            {
-                "role": "user",
-                "content": question
-            }
-        ],
-        tools=[
-            {
-                "type": "file_search",
-                "vector_store_ids": [vector_store_id]
-            }
-        ]
-    )
 
-    return response.output_text
 
 def delete_document_chunks(document_id: str):
     return
