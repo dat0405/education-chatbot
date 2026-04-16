@@ -14,7 +14,7 @@ export default function App() {
     {
       role: "assistant",
       content:
-        "Hello. I’m Dr. AI Kaisa. Upload your research and ask me questions."
+        "Hello. I’m Dr. AI Kaisa. How can I help you today?"
     }
   ]);
   const [text, setText] = useState("");
