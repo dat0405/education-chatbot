@@ -4,6 +4,7 @@ from fastapi import FastAPI, UploadFile, File, HTTPException, Depends
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
+from fastapi import Header
 
 from app.config import settings
 from app.schemas import (
@@ -58,8 +59,12 @@ def favicon():
 @app.post("/upload", response_model=UploadResponse)
 async def upload_file(
     file: UploadFile = File(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    x_admin_key: str = Header(None)
 ):
+    if x_admin_key != settings.admin_upload_key:
+        raise HTTPException(status_code=403, detail="Not allowed")
+
     if not file:
         raise HTTPException(status_code=400, detail="No file uploaded")
 
@@ -77,6 +82,11 @@ async def upload_file(
             chunks_indexed=doc.chunk_count,
             status=doc.status
         )
+
+        return UploadResponse(uploaded=[uploaded_item])
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
