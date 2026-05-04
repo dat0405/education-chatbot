@@ -88,16 +88,9 @@ async def upload_file(
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
     finally:
         if os.path.exists(save_path):
             os.remove(save_path)
-
-    return UploadResponse(success=True, uploaded=[uploaded_item])
 
 
 @app.post("/chat", response_model=ChatResponse)
