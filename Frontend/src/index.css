@@ -110,3 +110,10 @@ h1 {
 .thinking {
   color: #666;
 }
+.kaisa-logo {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  display: block;
+  margin-bottom: 12px;
+}

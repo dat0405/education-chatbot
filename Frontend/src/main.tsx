@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import logo from "./assets/kaisa-logo.png"; // 
 
 type Msg = {
   role: "user" | "assistant";
@@ -9,7 +10,7 @@ type Msg = {
 
 const API_BASE = "https://education-chatbot-production.up.railway.app";
 
-export default function App() {
+function App() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
@@ -54,6 +55,14 @@ export default function App() {
   return (
     <div className="page">
       <div className="container">
+
+        
+        <img
+          src={logo}
+          alt="Dr. AI Kaisa logo"
+          className="kaisa-logo"
+        />
+
         <h1>Dr. AI Kaisa</h1>
         <p className="subtitle">Let's chat.</p>
 
