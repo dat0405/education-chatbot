@@ -83,7 +83,10 @@ async def upload_file(
             status=doc.status
         )
 
-        return UploadResponse(uploaded=[uploaded_item])
+        return UploadResponse(
+    success=True,
+    uploaded=[uploaded_item]
+)
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

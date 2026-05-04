@@ -32,7 +32,7 @@ class UploadItem(BaseModel):
 
 class UploadResponse(BaseModel):
     success: bool
-    uploaded: List[UploadItem]
+    uploaded: list[UploadItem]
 
 
 class DocumentItem(BaseModel):
