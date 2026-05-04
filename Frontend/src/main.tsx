@@ -13,40 +13,11 @@ export default function App() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
-      content:
-        "Hello. I’m Dr. AI Kaisa. How can I help you today?"
+      content: "Hello. I’m Dr. AI Kaisa. How can I help you today?"
     }
   ]);
   const [text, setText] = useState("");
-  const [uploading, setUploading] = useState(false);
   const [thinking, setThinking] = useState(false);
-  const [status, setStatus] = useState("");
-
-  async function handleUpload(files: FileList | null) {
-    if (!files || files.length === 0) return;
-
-    const formData = new FormData();
-    formData.append("file", files[0]);
-
-    setUploading(true);
-    setStatus("Uploading knowledge files...");
-
-    try {
-      const res = await fetch(`${API_BASE}/upload`, {
-        method: "POST",
-        body: formData
-      });
-
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.detail || "Upload failed");
-
-      setStatus(`Uploaded ${data.uploaded.length} file(s) successfully.`);
-    } catch (error: any) {
-      setStatus(`Upload error: ${error.message}`);
-    } finally {
-      setUploading(false);
-    }
-  }
 
   async function sendMessage(e: React.FormEvent) {
     e.preventDefault();
@@ -85,19 +56,6 @@ export default function App() {
       <div className="container">
         <h1>Dr. AI Kaisa</h1>
         <p className="subtitle">Let's chat.</p>
-
-        <div className="toolbar">
-          <label className="upload-btn">
-            {uploading ? "Uploading..." : "Upload research files"}
-            <input
-              type="file"
-              multiple
-              onChange={(e) => handleUpload(e.target.files)}
-              hidden
-            />
-          </label>
-          <span className="status">{status}</span>
-        </div>
 
         <div className="chatbox">
           {messages.map((m, i) => (
