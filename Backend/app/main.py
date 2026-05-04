@@ -63,7 +63,7 @@ async def upload_file(
     x_admin_key: str | None = Header(None)
 ):
     if not settings.admin_upload_key or x_admin_key != settings.admin_upload_key:
-    raise HTTPException(status_code=403, detail="Not allowed")
+        raise HTTPException(status_code=403, detail="Not allowed")
 
     if file is None:
         raise HTTPException(status_code=400, detail="No file uploaded")
@@ -91,7 +91,6 @@ async def upload_file(
     finally:
         if os.path.exists(save_path):
             os.remove(save_path)
-
 
 @app.post("/chat", response_model=ChatResponse)
 def chat(req: ChatRequest):
