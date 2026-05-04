@@ -58,14 +58,14 @@ def favicon():
 
 @app.post("/upload", response_model=UploadResponse)
 async def upload_file(
-    file: UploadFile = File(...),
+    file: UploadFile | None = File(None),
     db: Session = Depends(get_db),
-    x_admin_key: str = Header(None)
+    x_admin_key: str | None = Header(None)
 ):
     if x_admin_key != settings.admin_upload_key:
         raise HTTPException(status_code=403, detail="Not allowed")
 
-    if not file:
+    if file is None:
         raise HTTPException(status_code=400, detail="No file uploaded")
 
     save_path = os.path.join(settings.upload_dir, file.filename)
@@ -84,6 +84,9 @@ async def upload_file(
         )
 
         return UploadResponse(uploaded=[uploaded_item])
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
