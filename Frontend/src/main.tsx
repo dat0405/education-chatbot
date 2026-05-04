@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import logo from "./assets/kaisa-logo.png"; // 
 
 type Msg = {
   role: "user" | "assistant";
@@ -17,6 +16,7 @@ function App() {
       content: "Hello. I’m Dr. AI Kaisa. How can I help you today?"
     }
   ]);
+
   const [text, setText] = useState("");
   const [thinking, setThinking] = useState(false);
 
@@ -55,10 +55,8 @@ function App() {
   return (
     <div className="page">
       <div className="container">
-
-        
         <img
-          src={logo}
+          src="/kaisa-logo.png"
           alt="Dr. AI Kaisa logo"
           className="kaisa-logo"
         />
@@ -78,6 +76,7 @@ function App() {
               <div>{m.content}</div>
             </div>
           ))}
+
           {thinking && <div className="thinking">Thinking...</div>}
         </div>
 

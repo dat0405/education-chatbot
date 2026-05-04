@@ -111,8 +111,9 @@ h1 {
   color: #666;
 }
 .kaisa-logo {
-  width: 200px;
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
   display: block;
-  margin: 20px auto;
-  background: yellow;
+  margin-bottom: 16px;
 }
