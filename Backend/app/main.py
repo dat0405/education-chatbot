@@ -62,9 +62,9 @@ async def upload_file(
     db: Session = Depends(get_db),
     x_admin_key: str | None = Header(None)
 ):
-    if x_admin_key != settings.admin_upload_key:
+    if not settings.admin_upload_key or x_admin_key != settings.admin_upload_key:
         raise HTTPException(status_code=403, detail="Not allowed")
-        
+
 
     if file is None:
         raise HTTPException(status_code=400, detail="No file uploaded")

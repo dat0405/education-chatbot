@@ -13,7 +13,7 @@ class Settings(BaseModel):
     cors_origins: list[str] = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
     database_url: str = os.getenv("DATABASE_URL", "sqlite:///./app.db")
     upload_dir: str = os.getenv("UPLOAD_DIR", "./uploads")
-    admin_upload_key: str
-    
+    admin_upload_key: str = ""
+
 
 settings = Settings()
