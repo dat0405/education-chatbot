@@ -112,8 +112,7 @@ h1 {
 }
 .kaisa-logo {
   width: 200px;
-  height: 200px;
-  object-fit: contain;
   display: block;
-  margin-bottom: 12px;
+  margin: 20px auto;
+  background: yellow;
 }
