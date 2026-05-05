@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 
@@ -8,17 +8,36 @@ type Msg = {
 };
 
 const API_BASE = "https://education-chatbot-production.up.railway.app";
+const STORAGE_KEY = "chat_messages";
+
+const DEFAULT_MESSAGES: Msg[] = [
+  {
+    role: "assistant",
+    content: "Hello. I’m Dr. AI Kaisa. How can I help you today?"
+  }
+];
 
 function App() {
-  const [messages, setMessages] = useState<Msg[]>([
-    {
-      role: "assistant",
-      content: "Hello. I’m Dr. AI Kaisa. How can I help you today?"
+  const [messages, setMessages] = useState<Msg[]>(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return DEFAULT_MESSAGES;
+      }
     }
-  ]);
+
+    return DEFAULT_MESSAGES;
+  });
 
   const [text, setText] = useState("");
   const [thinking, setThinking] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+  }, [messages]);
 
   async function sendMessage(e: React.FormEvent) {
     e.preventDefault();
