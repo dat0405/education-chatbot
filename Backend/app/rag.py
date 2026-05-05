@@ -57,6 +57,40 @@ def wait_until_file_ready(vector_store_id: str, vector_store_file_id: str):
         time.sleep(2)
 
 
+def should_use_file_search(messages) -> bool:
+    latest_user_message = messages[-1].content.lower()
+
+    file_keywords = [
+        "document",
+        "documents",
+        "doc",
+        "docs",
+        "file",
+        "files",
+        "uploaded",
+        "upload",
+        "pdf",
+        "source",
+        "sources",
+        "research",
+        "paper",
+        "article",
+        "text",
+        "attachment",
+        "according to the document",
+        "based on the document",
+        "based on the file",
+        "in the document",
+        "in the file",
+        "from the document",
+        "from the file",
+        "the uploaded document",
+        "the uploaded file",
+    ]
+
+    return any(keyword in latest_user_message for keyword in file_keywords)
+
+
 def generate_answer(messages, vector_store_id: str) -> str:
     input_messages = [
         {
@@ -77,12 +111,13 @@ Instead, begin in a conversational and relatable way.
 Use the conversation history to understand short replies such as "yes", "no", "tell me more", "continue", or "explain more".
 If the user says "yes" after you offered more details, continue with the detailed explanation.
 
-Always answer using the provided document context when relevant.
-If the uploaded documents do not contain the answer, you may answer from general educational knowledge, but clearly say that this is general knowledge.
-
-Do not assume the user has uploaded files, documents, or provided extra context unless it is explicitly mentioned in the conversation.
-Do not say "the files you uploaded", "the documents you provided", or similar unless the user has clearly uploaded or referenced files in the current conversation.
+Answer normal user questions directly without mentioning documents, uploaded files, file search, or missing document context.
+Only mention documents, files, uploads, sources, or provided context when the user explicitly asks about them or clearly refers to them.
+Never say phrases like "I don't see any documents", "the uploaded documents do not contain", "the files do not include", or similar unless the user specifically asks you to check uploaded documents.
 If no file or document context is relevant, simply answer naturally.
+
+When file/document context is explicitly requested, use the provided document context when relevant.
+If the user explicitly asks about uploaded documents and the answer is not in the documents, say this briefly and then offer a helpful general answer if appropriate.
 
 Keep your answer between 200 and 350 words for educational questions.
 For casual greetings or small talk, keep the answer short and natural.
@@ -131,18 +166,24 @@ Do not sound robotic or overly rigid.
             "content": msg.content
         })
 
-    response = client.responses.create(
-        model="gpt-4.1-mini",
-        temperature=0.55,
-        max_output_tokens=650,
-        input=input_messages,
-        tools=[
+    use_file_search = should_use_file_search(messages)
+
+    request_params = {
+        "model": "gpt-4.1-mini",
+        "temperature": 0.55,
+        "max_output_tokens": 550,
+        "input": input_messages,
+    }
+
+    if use_file_search:
+        request_params["tools"] = [
             {
                 "type": "file_search",
                 "vector_store_ids": [vector_store_id]
             }
         ]
-    )
+
+    response = client.responses.create(**request_params)
 
     return response.output_text
 
