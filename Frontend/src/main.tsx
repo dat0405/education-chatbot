@@ -87,16 +87,37 @@ function App() {
           {messages.map((m, i) => (
             <div
               key={i}
-              className={`msg ${m.role === "user" ? "user" : "assistant"}`}
+              className={`message-row ${
+                m.role === "user" ? "user-row" : "assistant-row"
+              }`}
             >
-              <div className="role">
-                {m.role === "user" ? "You" : "Dr. AI Kaisa"}
+              {m.role === "assistant" && (
+                <img
+                  src="/ai-avatar.svg"
+                  alt="Dr. AI Kaisa avatar"
+                  className="chat-avatar"
+                />
+              )}
+
+              <div className={`msg ${m.role === "user" ? "user" : "assistant"}`}>
+                <div className="role">
+                  {m.role === "user" ? "You" : "Dr. AI Kaisa"}
+                </div>
+                <div>{m.content}</div>
               </div>
-              <div>{m.content}</div>
             </div>
           ))}
 
-          {thinking && <div className="thinking">Thinking...</div>}
+          {thinking && (
+            <div className="message-row assistant-row">
+              <img
+                src="/ai-avatar.svg"
+                alt="Dr. AI Kaisa avatar"
+                className="chat-avatar"
+              />
+              <div className="thinking">Thinking...</div>
+            </div>
+          )}
         </div>
 
         <form className="composer" onSubmit={sendMessage}>
