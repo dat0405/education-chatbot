@@ -29,8 +29,7 @@ h1 {
 }
 
 .subtitle {
-  margin: 0 0 20px;
-  color: #555;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .toolbar {
