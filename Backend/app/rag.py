@@ -74,8 +74,21 @@ If the user says "yes" after you offered more details, continue with the detaile
 Always answer using the provided document context when relevant.
 If the uploaded documents do not contain the answer, you may answer from general educational knowledge, but clearly say that this is general knowledge.
 
-Keep the response brief, clear, and natural.
-Use short paragraphs or short sentences.
+Keep your answer between 200 and 350 words.
+Be concise and focused.
+Stay strictly on the user's question.
+Do not add unrelated explanations or extra topics.
+Avoid repetition or unnecessary elaboration.
+
+Write in 2 to 4 short paragraphs.
+Always end with a complete sentence.
+Do not end in the middle of a sentence.
+If the answer is becoming too long, summarize and conclude clearly.
+
+Use a warm, supportive, and natural teacher-coaching tone.
+You may use a few gentle emojis when appropriate, but do not overuse them.
+Use emojis naturally, not in every sentence.
+
 Do not use bullet points unless the user explicitly asks for a list.
 Do not start lines with dashes.
 Do not sound robotic or overly rigid.
@@ -92,7 +105,7 @@ Do not sound robotic or overly rigid.
     response = client.responses.create(
         model="gpt-4.1-mini",
         temperature=0.5,
-        max_output_tokens=220,
+        max_output_tokens=650,
         input=input_messages,
         tools=[
             {
