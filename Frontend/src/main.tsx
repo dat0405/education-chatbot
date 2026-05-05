@@ -74,15 +74,22 @@ function App() {
   return (
     <div className="page">
       <div className="container">
-        <img
-          src="/kaisa-logo.png"
-          alt="Dr. AI Kaisa logo"
-          className="kaisa-logo"
-        />
 
-        <h1>Dr. AI Kaisa</h1>
-        <p className="subtitle">Let's chat.</p>
+        {/* HEADER */}
+        <header className="hero">
+          <img
+            src="/kaisa-logo.png"
+            alt="Dr. AI Kaisa logo"
+            className="kaisa-logo"
+          />
 
+          <div className="hero-text">
+            <h1>Dr. AI KAISA</h1>
+            <p className="subtitle">Let’s chat</p>
+          </div>
+        </header>
+
+        {/* CHAT */}
         <div className="chatbox">
           {messages.map((m, i) => (
             <div
@@ -91,6 +98,7 @@ function App() {
                 m.role === "user" ? "user-row" : "assistant-row"
               }`}
             >
+              {/* Avatar AI */}
               {m.role === "assistant" && (
                 <img
                   src="/ai-avatar.svg"
@@ -99,6 +107,7 @@ function App() {
                 />
               )}
 
+              {/* Message bubble */}
               <div className={`msg ${m.role === "user" ? "user" : "assistant"}`}>
                 <div className="role">
                   {m.role === "user" ? "You" : "Dr. AI Kaisa"}
@@ -108,6 +117,7 @@ function App() {
             </div>
           ))}
 
+          {/* Thinking */}
           {thinking && (
             <div className="message-row assistant-row">
               <img
@@ -120,6 +130,7 @@ function App() {
           )}
         </div>
 
+        {/* INPUT */}
         <form className="composer" onSubmit={sendMessage}>
           <input
             value={text}
@@ -128,6 +139,7 @@ function App() {
           />
           <button type="submit">Send</button>
         </form>
+
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 :root {
   font-family: Inter, Arial, sans-serif;
   color: #111;
-  background: #f6f7fb;
+  background: #7755c9;
 }
 
 * {
@@ -15,24 +15,146 @@ body {
 
 .page {
   min-height: 100vh;
-  padding: 32px 16px;
+  padding: 48px 16px 32px;
+  background: #7755c9;
 }
 
 .container {
-  max-width: 900px;
+  max-width: 1060px;
   margin: 0 auto;
 }
 
+/* Header */
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.kaisa-logo {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 h1 {
-  margin: 0 0 8px;
-  font-size: 2rem;
+  margin: 0 0 10px;
+  font-size: 2.4rem;
+  line-height: 1;
+  color: white;
+  font-weight: 800;
 }
 
 .subtitle {
-  margin: 0 0 20px;
-  color: rgba(255, 255, 255, 0.85) !important;
+  margin: 0;
+  color: white !important;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 800;
 }
 
+/* Chat */
+.chatbox {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 24px;
+  padding: 28px;
+  min-height: 520px;
+  margin-bottom: 16px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.14);
+}
+
+.message-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 22px;
+}
+
+.assistant-row {
+  justify-content: flex-start;
+}
+
+.user-row {
+  justify-content: flex-end;
+}
+
+.chat-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: contain;
+  margin-right: 12px;
+  background: white;
+  padding: 6px;
+  flex-shrink: 0;
+}
+
+.msg {
+  max-width: 72%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  margin-bottom: 0;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  font-size: 16px;
+}
+
+.msg.user {
+  background: #dcecff;
+  margin-left: 0;
+}
+
+.msg.assistant {
+  background: #f1f3f5;
+}
+
+.role {
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.thinking {
+  background: #f1f3f5;
+  padding: 14px 18px;
+  border-radius: 14px;
+  color: #555;
+}
+
+/* Composer */
+.composer {
+  display: flex;
+  gap: 12px;
+}
+
+.composer input {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  font-size: 16px;
+}
+
+.composer button {
+  padding: 16px 22px;
+  border: none;
+  border-radius: 14px;
+  background: #111;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* Old optional classes */
 .toolbar {
   display: flex;
   gap: 16px;
@@ -52,97 +174,4 @@ h1 {
 
 .status {
   color: #444;
-}
-
-.chatbox {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 16px;
-  padding: 16px;
-  min-height: 420px;
-  margin-bottom: 16px;
-}
-
-.msg {
-  max-width: 80%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  margin-bottom: 14px;
-  white-space: pre-wrap;
-  line-height: 1.5;
-}
-
-.msg.user {
-  background: #dcecff;
-  margin-left: auto;
-}
-
-.msg.assistant {
-  background: #f1f3f5;
-}
-
-.role {
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-
-.composer {
-  display: flex;
-  gap: 10px;
-}
-
-.composer input {
-  flex: 1;
-  padding: 14px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  font-size: 16px;
-}
-
-.composer button {
-  padding: 14px 18px;
-  border: none;
-  border-radius: 12px;
-  background: #111;
-  color: white;
-  cursor: pointer;
-}
-
-.thinking {
-  color: #666;
-}
-.kaisa-logo {
-  width: 220px;
-  height: 220px;
-  object-fit: contain;
-  display: block;
-  margin-bottom: 16px;
-}
-.message-row {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 14px;
-}
-
-.assistant-row {
-  justify-content: flex-start;
-}
-
-.user-row {
-  justify-content: flex-end;
-}
-
-.chat-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  object-fit: contain;
-  margin-right: 10px;
-  background: white;
-  padding: 6px;
-  flex-shrink: 0;
-}
-
-.message-row .msg {
-  margin-bottom: 0;
 }
