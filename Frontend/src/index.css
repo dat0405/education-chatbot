@@ -24,7 +24,6 @@ body {
   margin: 0 auto;
 }
 
-/* Header */
 .hero {
   display: flex;
   align-items: center;
@@ -63,7 +62,6 @@ h1 {
   font-weight: 800;
 }
 
-/* Chat */
 .chatbox {
   background: white;
   border: 1px solid #ddd;
@@ -89,14 +87,22 @@ h1 {
 }
 
 .chat-avatar {
-  width: 42px;
-  height: 42px;
+  width: 46px;
+  height: 46px;
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.assistant-avatar {
   margin-right: 12px;
   background: white;
+}
+
+.user-avatar {
+  margin-left: 12px;
+  background: #7755c9;
   padding: 6px;
-  flex-shrink: 0;
 }
 
 .msg {
@@ -130,7 +136,6 @@ h1 {
   color: #555;
 }
 
-/* Composer */
 .composer {
   display: flex;
   gap: 12px;
@@ -154,7 +159,6 @@ h1 {
   font-weight: 700;
 }
 
-/* Old optional classes */
 .toolbar {
   display: flex;
   gap: 16px;

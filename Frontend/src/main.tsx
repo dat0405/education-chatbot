@@ -74,8 +74,6 @@ function App() {
   return (
     <div className="page">
       <div className="container">
-
-        {/* HEADER */}
         <header className="hero">
           <img
             src="/kaisa-logo.png"
@@ -89,7 +87,6 @@ function App() {
           </div>
         </header>
 
-        {/* CHAT */}
         <div className="chatbox">
           {messages.map((m, i) => (
             <div
@@ -98,39 +95,43 @@ function App() {
                 m.role === "user" ? "user-row" : "assistant-row"
               }`}
             >
-              {/* Avatar AI */}
               {m.role === "assistant" && (
                 <img
-                  src="/ai-avatar.svg"
+                  src="/kaisa-logo.png"
                   alt="Dr. AI Kaisa avatar"
-                  className="chat-avatar"
+                  className="chat-avatar assistant-avatar"
                 />
               )}
 
-              {/* Message bubble */}
               <div className={`msg ${m.role === "user" ? "user" : "assistant"}`}>
                 <div className="role">
                   {m.role === "user" ? "You" : "Dr. AI Kaisa"}
                 </div>
                 <div>{m.content}</div>
               </div>
+
+              {m.role === "user" && (
+                <img
+                  src="/ai-avatar.svg"
+                  alt="User avatar"
+                  className="chat-avatar user-avatar"
+                />
+              )}
             </div>
           ))}
 
-          {/* Thinking */}
           {thinking && (
             <div className="message-row assistant-row">
               <img
-                src="/ai-avatar.svg"
+                src="/kaisa-logo.png"
                 alt="Dr. AI Kaisa avatar"
-                className="chat-avatar"
+                className="chat-avatar assistant-avatar"
               />
               <div className="thinking">Thinking...</div>
             </div>
           )}
         </div>
 
-        {/* INPUT */}
         <form className="composer" onSubmit={sendMessage}>
           <input
             value={text}
@@ -139,7 +140,6 @@ function App() {
           />
           <button type="submit">Send</button>
         </form>
-
       </div>
     </div>
   );
