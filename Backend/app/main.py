@@ -105,7 +105,7 @@ def chat(req: ChatRequest):
         raise HTTPException(status_code=400, detail="Empty user message")
 
     vector_store_id = ensure_vector_store()
-    answer = generate_answer(user_message, vector_store_id)
+    answer = generate_answer(req.messages, vector_store_id)
 
     return ChatResponse(
         answer=answer,

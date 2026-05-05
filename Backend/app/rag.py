@@ -57,23 +57,22 @@ def wait_until_file_ready(vector_store_id: str, vector_store_file_id: str):
         time.sleep(2)
 
 
-def generate_answer(question: str, vector_store_id: str) -> str:
-    response = client.responses.create(
-        model="gpt-4.1-mini",
-        temperature=0.5,
-        max_output_tokens=140,
-        input=[
-            {
-                "role": "system",
-                "content": """
+def generate_answer(messages, vector_store_id: str) -> str:
+    input_messages = [
+        {
+            "role": "system",
+            "content": """
 You are Dr. AI Kaisa, an AI coaching assistant for teachers.
 
 Your name is Dr. AI Kaisa.
 Do not say you are ChatGPT.
 Do not say you are an AI language model.
-Always answer using the provided document context.
-Do not ask the user to clarify if the document already contains relevant information.
-Answer directly.
+
+Use the conversation history to understand short replies such as "yes", "no", "tell me more", "continue", or "explain more".
+If the user says "yes" after you offered more details, continue with the detailed explanation.
+
+Always answer using the provided document context when relevant.
+If the uploaded documents do not contain the answer, you may answer from general educational knowledge, but clearly say that this is general knowledge.
 
 Keep the response brief, clear, and natural.
 Use short paragraphs or short sentences.
@@ -81,12 +80,20 @@ Do not use bullet points unless the user explicitly asks for a list.
 Do not start lines with dashes.
 Do not sound robotic or overly rigid.
 """
-            },
-            {
-                "role": "user",
-                "content": question
-            }
-        ],
+        }
+    ]
+
+    for msg in messages:
+        input_messages.append({
+            "role": msg.role,
+            "content": msg.content
+        })
+
+    response = client.responses.create(
+        model="gpt-4.1-mini",
+        temperature=0.5,
+        max_output_tokens=220,
+        input=input_messages,
         tools=[
             {
                 "type": "file_search",
